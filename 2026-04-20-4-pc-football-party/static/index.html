@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Football Party Room</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero card">
+        <p class="eyebrow">No account · Room code · Internet ready</p>
+        <h1>Football Party Room</h1>
+        <p class="subtitle">
+          A football quiz and word-game party room for 2 to 4 players.
+          Deploy it to a public URL and friends on different networks can join instantly.
+        </p>
+      </section>
+
+      <section id="entryCard" class="card grid-two">
+        <div>
+          <label for="nickname">Nickname</label>
+          <input id="nickname" maxlength="18" placeholder="e.g. Son7" />
+          <button id="createBtn" class="primary">Create room</button>
+        </div>
+        <div>
+          <label for="roomCode">Invite code</label>
+          <input id="roomCode" maxlength="5" placeholder="ABCDE" />
+          <button id="joinBtn">Join room</button>
+        </div>
+      </section>
+
+      <section id="gameCard" class="card hidden">
+        <div class="topline">
+          <div>
+            <p class="small">ROOM CODE</p>
+            <h2 id="roomLabel">-----</h2>
+          </div>
+          <div class="statusbox">
+            <p class="small">STATUS</p>
+            <strong id="phaseLabel">Lobby</strong>
+          </div>
+        </div>
+
+        <div class="banner">
+          <span id="syncLabel">Waiting for sync</span>
+          <span id="messageLabel">The host can start once everyone joins.</span>
+        </div>
+
+        <div class="card-lite">
+          <div>
+            <p class="small">INVITE LINK</p>
+            <strong id="inviteLink">Pending</strong>
+            <p id="ttlLabel" class="muted">Room lifetime will appear here.</p>
+          </div>
+          <button id="copyInviteBtn">Copy invite link</button>
+        </div>
+
+        <div class="grid-two">
+          <div class="panel">
+            <h3>Players</h3>
+            <div id="playersList" class="players"></div>
+            <div id="hostControls" class="controls hidden">
+              <button id="startBtn" class="primary">Start game</button>
+              <button id="revealBtn">Reveal answer</button>
+              <button id="nextBtn">Next round</button>
+              <button id="resetBtn">New game</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Round</h3>
+            <div id="roundBox" class="round empty">The game has not started yet.</div>
+            <div id="answerBox" class="answerbox hidden">
+              <label for="answerInput">Answer</label>
+              <input id="answerInput" maxlength="40" placeholder="Enter your answer" />
+              <button id="submitBtn" class="primary">Submit</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+  </html>

@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: football-party-room
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: ROOM_TTL_SECONDS
+        value: "21600"
+      - key: CLEANUP_INTERVAL_SECONDS
+        value: "60"
