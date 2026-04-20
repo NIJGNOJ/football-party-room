@@ -1,3 +1,22 @@
+const TXT = {
+  requestFailed: "\uc694\uccad \ucc98\ub9ac \uc911 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4.",
+  roomAlivePrefix: "\ub9c8\uc9c0\ub9c9 \ud65c\ub3d9 \ud6c4 \uc57d ",
+  roomAliveSuffix: "\ubd84 \ub3d9\uc548 \ubc29\uc774 \uc720\uc9c0\ub429\ub2c8\ub2e4.",
+  lobby: "\ub85c\ube44",
+  playing: "\uc9c4\ud589 \uc911",
+  finished: "\uc885\ub8cc",
+  quiz: "\ud034\uc988",
+  word: "\ucd95\uad6c \ub2e8\uc5b4 \ud034\uc988",
+  notStarted: "\uac8c\uc784\uc774 \uc544\uc9c1 \uc2dc\uc791\ub418\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4.",
+  submitted: "\uc81c\ucd9c \uc644\ub8cc",
+  answer: "\uc815\ub2f5:",
+  liveSync: "\uc2e4\uc2dc\uac04 \ub3d9\uae30\ud654 \uc911",
+  syncFailed: "\ub3d9\uae30\ud654\uc5d0 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4.",
+  pendingInvite: "\uc0dd\uc131 \ub300\uae30 \uc911",
+  copiedInvite: "\ucd08\ub300 \ub9c1\ud06c\ub97c \ubcf5\uc0ac\ud588\uc2b5\ub2c8\ub2e4.",
+  pointsSuffix: "\uc810",
+};
+
 const state = {
   roomCode: "",
   playerId: "",
@@ -20,7 +39,7 @@ async function api(path, payload) {
   });
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.error || "요청 처리 중 오류가 발생했습니다.");
+    throw new Error(data.error || TXT.requestFailed);
   }
   return data;
 }
@@ -62,7 +81,7 @@ function updateInviteLink() {
   const seconds = state.room?.expiresInSeconds ?? state.config.roomTtlSeconds;
   if (seconds > 0) {
     const minutes = Math.max(1, Math.ceil(seconds / 60));
-    $("ttlLabel").textContent = `마지막 활동 후 약 ${minutes}분 동안 방이 유지됩니다.`;
+    $("ttlLabel").textContent = `${TXT.roomAlivePrefix}${minutes}${TXT.roomAliveSuffix}`;
   }
 }
 
@@ -92,16 +111,23 @@ function setSyncLabel(text, bad = false) {
   el.classList.toggle("bad", bad);
 }
 
+function setEntryNotice(text = "") {
+  const el = $("entryNotice");
+  if (!el) return;
+  el.textContent = text;
+  el.classList.toggle("hidden", !text);
+}
+
 function phaseText(room) {
-  if (room.phase === "lobby") return "로비";
-  if (room.phase === "playing") return "진행 중";
-  if (room.phase === "finished") return "종료";
+  if (room.phase === "lobby") return TXT.lobby;
+  if (room.phase === "playing") return TXT.playing;
+  if (room.phase === "finished") return TXT.finished;
   return room.phase;
 }
 
 function roundTypeText(type) {
-  if (type === "quiz") return "퀴즈";
-  if (type === "word") return "축구 단어 퀴즈";
+  if (type === "quiz") return TXT.quiz;
+  if (type === "word") return TXT.word;
   return type;
 }
 
@@ -119,6 +145,7 @@ function renderRoom() {
 
   $("entryCard").classList.add("hidden");
   $("gameCard").classList.remove("hidden");
+  setEntryNotice("");
   $("roomLabel").textContent = room.roomCode;
   $("phaseLabel").textContent = phaseText(room);
   $("messageLabel").textContent = room.game.message || "";
@@ -134,7 +161,7 @@ function renderRoom() {
       return `
         <div class="player${me}${host}">
           <span>${index + 1}. ${escapeHtml(player.nickname)}</span>
-          <strong>${player.score}점</strong>
+          <strong>${player.score}${TXT.pointsSuffix}</strong>
         </div>
       `;
     })
@@ -143,7 +170,7 @@ function renderRoom() {
   const round = room.game.currentRound;
   if (!round) {
     $("roundBox").className = "round empty";
-    $("roundBox").innerHTML = "게임이 아직 시작되지 않았습니다.";
+    $("roundBox").innerHTML = TXT.notStarted;
     $("answerBox").classList.add("hidden");
     return;
   }
@@ -174,7 +201,7 @@ function renderRoom() {
                   : "pending";
             return `<div class="submission ${badge}">
               <span>${escapeHtml(player.nickname)}</span>
-              <span>${escapeHtml(info.display || "제출 완료")}</span>
+              <span>${escapeHtml(info.display || TXT.submitted)}</span>
             </div>`;
           })
           .join("")}
@@ -183,7 +210,7 @@ function renderRoom() {
 
   const answerHtml = revealed
     ? `<div class="reveal">
-        <strong>정답:</strong> ${escapeHtml(round.answer || "")}
+        <strong>${TXT.answer}</strong> ${escapeHtml(round.answer || "")}
         <p>${escapeHtml(round.explanation || "")}</p>
       </div>`
     : "";
@@ -216,7 +243,7 @@ async function syncState() {
       `/api/state?roomCode=${encodeURIComponent(state.roomCode)}&playerId=${encodeURIComponent(state.playerId)}`,
     );
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "동기화에 실패했습니다.");
+    if (!res.ok) throw new Error(data.error || TXT.syncFailed);
     state.room = data;
     const snapshot = meaningfulRoomSnapshot(data);
     if (snapshot !== state.lastRenderedSnapshot) {
@@ -225,7 +252,7 @@ async function syncState() {
     } else {
       updateInviteLink();
     }
-    setSyncLabel("실시간 동기화 중");
+    setSyncLabel(TXT.liveSync);
   } catch (error) {
     setSyncLabel(error.message, true);
   }
@@ -233,6 +260,7 @@ async function syncState() {
 
 async function createRoom() {
   const nickname = $("nickname").value.trim();
+  setEntryNotice("");
   const data = await api("/api/create-room", { nickname });
   state.roomCode = data.room.roomCode;
   state.playerId = data.playerId;
@@ -247,6 +275,7 @@ async function createRoom() {
 async function joinRoom() {
   const nickname = $("nickname").value.trim();
   const roomCode = $("roomCode").value.trim().toUpperCase();
+  setEntryNotice("");
   const data = await api("/api/join-room", { nickname, roomCode });
   state.roomCode = roomCode;
   state.playerId = data.playerId;
@@ -278,9 +307,9 @@ function startPolling() {
 
 async function copyInviteLink() {
   const text = $("inviteLink").textContent;
-  if (!text || text === "생성 대기 중") return;
+  if (!text || text === TXT.pendingInvite) return;
   await navigator.clipboard.writeText(text);
-  setSyncLabel("초대 링크를 복사했습니다.");
+  setSyncLabel(TXT.copiedInvite);
 }
 
 function bindEvents() {
@@ -294,6 +323,9 @@ function bindEvents() {
 }
 
 function showError(error) {
+  if (!$("entryCard").classList.contains("hidden")) {
+    setEntryNotice(error.message);
+  }
   setSyncLabel(error.message, true);
 }
 
