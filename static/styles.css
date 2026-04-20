@@ -182,18 +182,31 @@ button.primary {
 }
 
 .options {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   margin: 14px 0;
 }
 
 .option {
-  padding: 8px 12px;
-  border-radius: 999px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 16px;
   background: #efe7d3;
   border: 0;
   font: inherit;
+  text-align: left;
+  transition: transform 120ms ease, background-color 120ms ease;
+}
+
+.option:hover:not(:disabled) {
+  background: #e4d8bb;
+  transform: translateY(-1px);
+}
+
+.option.locked {
+  cursor: default;
+  opacity: 0.72;
 }
 
 .answerbox {
@@ -225,6 +238,10 @@ button.primary {
 
 @media (max-width: 760px) {
   .grid-two {
+    grid-template-columns: 1fr;
+  }
+
+  .options {
     grid-template-columns: 1fr;
   }
 

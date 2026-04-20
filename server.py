@@ -27,55 +27,67 @@ ROOMS = {}
 ROUND_BANK = [
     {
         "type": "quiz",
-        "prompt": "Which country has won the most FIFA World Cups?",
-        "options": ["Germany", "Brazil", "Argentina", "Italy"],
-        "answer": "Brazil",
-        "explanation": "Brazil has won the men's FIFA World Cup five times.",
+        "prompt": "FIFA 월드컵 최다 우승 국가는 어디일까요?",
+        "options": ["독일", "브라질", "아르헨티나", "이탈리아"],
+        "answer": "브라질",
+        "points": 2,
+        "explanation": "브라질은 남자 FIFA 월드컵에서 총 5회 우승했습니다.",
     },
     {
         "type": "word",
-        "prompt": "Enter a football position or tactical word that starts with M.",
-        "answer": ["midfielder", "man-marking", "marker"],
-        "explanation": "Example answer: midfielder",
+        "prompt": "다음 중 M으로 시작하는 축구 포지션 또는 전술 용어는 무엇일까요?",
+        "options": ["미드필더", "스위퍼", "윙어", "타깃맨"],
+        "answer": "미드필더",
+        "points": 3,
+        "explanation": "정답은 미드필더입니다.",
     },
     {
         "type": "quiz",
-        "prompt": "Which club has won the most UEFA Champions League titles?",
-        "options": ["Barcelona", "Liverpool", "AC Milan", "Real Madrid"],
-        "answer": "Real Madrid",
-        "explanation": "Real Madrid holds the record for most Champions League titles.",
+        "prompt": "UEFA 챔피언스리그 최다 우승 클럽은 어디일까요?",
+        "options": ["바르셀로나", "리버풀", "AC 밀란", "레알 마드리드"],
+        "answer": "레알 마드리드",
+        "points": 2,
+        "explanation": "레알 마드리드는 챔피언스리그 최다 우승 클럽입니다.",
     },
     {
         "type": "word",
-        "prompt": "Enter a football skill or play word that starts with D.",
-        "answer": ["dribble", "dummy", "dive", "deflection"],
-        "explanation": "Example answer: dribble",
+        "prompt": "다음 중 D로 시작하는 축구 기술 또는 플레이 용어는 무엇일까요?",
+        "options": ["드리블", "태클", "발리", "헤더"],
+        "answer": "드리블",
+        "points": 3,
+        "explanation": "정답은 드리블입니다.",
     },
     {
         "type": "quiz",
-        "prompt": "What does a hat-trick usually mean in one match?",
-        "options": ["3 assists", "3 goals", "3 saves", "3 yellow cards"],
-        "answer": "3 goals",
-        "explanation": "A hat-trick usually means one player scores three goals in a match.",
+        "prompt": "한 경기에서 해트트릭은 보통 무엇을 뜻할까요?",
+        "options": ["도움 3개", "3골", "선방 3개", "옐로카드 3장"],
+        "answer": "3골",
+        "points": 2,
+        "explanation": "해트트릭은 일반적으로 한 선수가 3골을 넣는 것을 뜻합니다.",
     },
     {
         "type": "word",
-        "prompt": "Enter a football field or match-flow word that starts with P.",
-        "answer": ["pitch", "penalty", "press", "possession"],
-        "explanation": "Example answer: pitch",
+        "prompt": "다음 중 P로 시작하는 축구 경기장 또는 경기 흐름 관련 용어는 무엇일까요?",
+        "options": ["피치", "코너", "벤치", "터널"],
+        "answer": "피치",
+        "points": 3,
+        "explanation": "정답은 피치입니다.",
     },
     {
         "type": "quiz",
-        "prompt": "What is the key idea behind an offside call?",
-        "options": ["Shirt color", "Ball speed", "Position ahead of defenders", "Crowd size"],
-        "answer": "Position ahead of defenders",
-        "explanation": "Offside depends on the attacker's position at the moment the pass is made.",
+        "prompt": "오프사이드 판정의 핵심 기준으로 가장 가까운 것은 무엇일까요?",
+        "options": ["유니폼 색상", "공의 속도", "수비수보다 앞선 위치", "관중 수"],
+        "answer": "수비수보다 앞선 위치",
+        "points": 2,
+        "explanation": "오프사이드는 패스 순간 공격수의 위치를 기준으로 판단합니다.",
     },
     {
         "type": "word",
-        "prompt": "Enter a football equipment word that starts with B.",
-        "answer": ["ball", "boots", "bib"],
-        "explanation": "Example answer: boots",
+        "prompt": "다음 중 B로 시작하는 축구 장비 용어는 무엇일까요?",
+        "options": ["축구화", "호루라기", "골망", "주장 완장"],
+        "answer": "축구화",
+        "points": 3,
+        "explanation": "정답은 축구화입니다.",
     },
 ]
 
@@ -146,15 +158,14 @@ def room_snapshot(room, viewer_id=None):
             "submissions": {
                 pid: {
                     "answered": True,
-                    "display": entry["answer"] if game["status"] == "revealed" or pid == viewer_id else "Submitted",
+                    "display": entry["answer"] if game["status"] == "revealed" or pid == viewer_id else "제출 완료",
                     "correct": entry["correct"] if game["status"] == "revealed" else None,
                 }
                 for pid, entry in game["submissions"].items()
             },
         }
         if game["status"] == "revealed":
-            answer = src["answer"]
-            current_round["answer"] = answer if isinstance(answer, str) else src["answer"][0]
+            current_round["answer"] = src["answer"]
 
     return {
         "roomCode": room["code"],
@@ -176,7 +187,7 @@ def room_snapshot(room, viewer_id=None):
 def require_room(room_code):
     room = ROOMS.get(room_code.upper())
     if not room:
-        raise ValueError("Room not found.")
+        raise ValueError("방을 찾을 수 없습니다.")
     return room
 
 
@@ -184,13 +195,13 @@ def require_player(room, player_id):
     for player in room["players"]:
         if player["id"] == player_id:
             return player
-    raise ValueError("Player not found.")
+    raise ValueError("플레이어를 찾을 수 없습니다.")
 
 
 def create_room(nickname):
     nickname = nickname.strip()
     if not nickname:
-        raise ValueError("Enter a nickname.")
+        raise ValueError("닉네임을 입력해주세요.")
     code = make_room_code()
     host = new_player(nickname)
     room = {
@@ -204,7 +215,7 @@ def create_room(nickname):
             "roundIndex": -1,
             "status": "waiting",
             "submissions": {},
-            "message": "The host can start the match when everyone has joined.",
+            "message": "모든 플레이어가 들어오면 방장이 게임을 시작할 수 있습니다.",
         },
     }
     ROOMS[code] = room
@@ -214,10 +225,10 @@ def create_room(nickname):
 def join_room(room_code, nickname):
     nickname = nickname.strip()
     if not nickname:
-        raise ValueError("Enter a nickname.")
+        raise ValueError("닉네임을 입력해주세요.")
     room = require_room(room_code)
     if len(room["players"]) >= 4:
-        raise ValueError("This room is already full.")
+        raise ValueError("이 방은 이미 가득 찼습니다.")
     player = new_player(nickname)
     room["players"].append(player)
     touch_room(room)
@@ -226,15 +237,15 @@ def join_room(room_code, nickname):
 
 def start_game(room, player_id):
     if room["hostId"] != player_id:
-        raise ValueError("Only the host can start the game.")
+        raise ValueError("방장만 게임을 시작할 수 있습니다.")
     if len(room["players"]) < 2:
-        raise ValueError("At least 2 players are required.")
+        raise ValueError("최소 2명이 필요합니다.")
     room["phase"] = "playing"
     room["game"]["deck"] = build_deck()
     room["game"]["roundIndex"] = 0
     room["game"]["status"] = "question"
     room["game"]["submissions"] = {}
-    room["game"]["message"] = "Round 1 started. Everyone can submit an answer."
+    room["game"]["message"] = "1라운드 시작. 정답을 선택해주세요."
     for player in room["players"]:
         player["score"] = 0
     touch_room(room)
@@ -242,43 +253,43 @@ def start_game(room, player_id):
 
 def reveal_round(room, player_id):
     if room["hostId"] != player_id:
-        raise ValueError("Only the host can reveal answers.")
+        raise ValueError("방장만 정답을 공개할 수 있습니다.")
     if room["game"]["status"] != "question":
-        raise ValueError("This round cannot be revealed right now.")
+        raise ValueError("지금은 정답을 공개할 수 없습니다.")
     room["game"]["status"] = "revealed"
-    room["game"]["message"] = "Answer revealed. The host can move to the next round."
+    room["game"]["message"] = "정답이 공개되었습니다. 다음 라운드로 넘어갈 수 있습니다."
     touch_room(room)
 
 
 def advance_round(room, player_id):
     if room["hostId"] != player_id:
-        raise ValueError("Only the host can move to the next round.")
+        raise ValueError("방장만 다음 라운드로 이동할 수 있습니다.")
     game = room["game"]
     if game["status"] == "question":
-        raise ValueError("Reveal the answer first.")
+        raise ValueError("먼저 정답을 공개해주세요.")
     if game["roundIndex"] >= len(game["deck"]) - 1:
         room["phase"] = "finished"
         game["status"] = "finished"
-        game["message"] = "Game finished. Check the scores and start a new match if you want."
+        game["message"] = "게임이 끝났습니다. 점수를 확인하고 새 게임을 시작해보세요."
         touch_room(room)
         return
     game["roundIndex"] += 1
     game["status"] = "question"
     game["submissions"] = {}
-    game["message"] = f"Round {game['roundIndex'] + 1} started."
+    game["message"] = f"{game['roundIndex'] + 1}라운드 시작."
     touch_room(room)
 
 
 def reset_game(room, player_id):
     if room["hostId"] != player_id:
-        raise ValueError("Only the host can reset the game.")
+        raise ValueError("방장만 게임을 초기화할 수 있습니다.")
     room["phase"] = "lobby"
     room["game"] = {
         "deck": [],
         "roundIndex": -1,
         "status": "waiting",
         "submissions": {},
-        "message": "New match ready. Invite players and start again.",
+        "message": "새 게임 준비 완료. 플레이어를 모은 뒤 다시 시작하세요.",
     }
     for player in room["players"]:
         player["score"] = 0
@@ -287,22 +298,18 @@ def reset_game(room, player_id):
 
 def score_submission(round_data, raw_answer):
     answer = normalize_text(raw_answer)
-    if round_data["type"] == "quiz":
-        correct = normalize_text(round_data["answer"]) == answer
-        return correct, 2 if correct else 0
-    accepted = {normalize_text(item) for item in round_data["answer"]}
-    correct = answer in accepted
-    return correct, 3 if correct else 0
+    correct = normalize_text(round_data["answer"]) == answer
+    return correct, round_data.get("points", 2) if correct else 0
 
 
 def submit_answer(room, player_id, answer):
     game = room["game"]
     if room["phase"] != "playing" or game["status"] != "question":
-        raise ValueError("You cannot submit right now.")
+        raise ValueError("지금은 제출할 수 없습니다.")
     if player_id in game["submissions"]:
-        raise ValueError("You already answered this round.")
+        raise ValueError("이번 라운드에는 이미 답했습니다.")
     if not str(answer).strip():
-        raise ValueError("Enter an answer.")
+        raise ValueError("답을 선택해주세요.")
     current_round = game["deck"][game["roundIndex"]]
     correct, points = score_submission(current_round, answer)
     player = require_player(room, player_id)
@@ -314,14 +321,14 @@ def submit_answer(room, player_id, answer):
     }
     if len(game["submissions"]) == len(room["players"]):
         game["status"] = "revealed"
-        game["message"] = "All players answered. The round result is now revealed."
+        game["message"] = "모든 플레이어가 답했습니다. 라운드 결과가 공개되었습니다."
     else:
-        game["message"] = f"{len(game['submissions'])}/{len(room['players'])} players have answered."
+        game["message"] = f"{len(game['submissions'])}/{len(room['players'])}명이 답했습니다."
     touch_room(room)
 
 
 class GameHandler(BaseHTTPRequestHandler):
-    server_version = "FootballParty/1.1"
+    server_version = "FootballParty/1.2"
 
     def do_GET(self):
         parsed = urlparse(self.path)
@@ -389,7 +396,7 @@ class GameHandler(BaseHTTPRequestHandler):
                     elif action == "submit":
                         submit_answer(room, player_id, payload.get("answer", ""))
                     else:
-                        raise ValueError("Unknown action.")
+                        raise ValueError("알 수 없는 요청입니다.")
                     data = {"room": room_snapshot(room, player_id)}
                 else:
                     self.send_error(HTTPStatus.NOT_FOUND, "Not found")
@@ -447,8 +454,8 @@ def main():
     server = ThreadingHTTPServer((HOST, PORT), GameHandler)
     public_hint = PUBLIC_BASE_URL or RENDER_EXTERNAL_URL or f"http://127.0.0.1:{PORT}"
     print(f"Football Party server running on {public_hint}")
-    print("Set PUBLIC_BASE_URL only if you want to override the detected public URL.")
-    print(f"Rooms expire after {ROOM_TTL_SECONDS // 60} minutes of inactivity.")
+    print("공개 주소를 직접 지정하려면 PUBLIC_BASE_URL을 설정하세요.")
+    print(f"방은 마지막 활동 후 {ROOM_TTL_SECONDS // 60}분이 지나면 만료됩니다.")
     server.serve_forever()
 
 

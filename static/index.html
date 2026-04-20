@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,24 +9,24 @@
   <body>
     <main class="shell">
       <section class="hero card">
-        <p class="eyebrow">No account · Room code · Internet ready</p>
+        <p class="eyebrow">계정 없이 · 방 코드 · 온라인 4인 플레이</p>
         <h1>Football Party Room</h1>
         <p class="subtitle">
-          A football quiz and word-game party room for 2 to 4 players.
-          Deploy it to a public URL and friends on different networks can join instantly.
+          축구 퀴즈를 2명에서 4명까지 함께 즐길 수 있는 온라인 파티룸입니다.
+          공개 주소로 배포하면 서로 다른 인터넷 환경에서도 바로 접속할 수 있습니다.
         </p>
       </section>
 
       <section id="entryCard" class="card grid-two">
         <div>
-          <label for="nickname">Nickname</label>
-          <input id="nickname" maxlength="18" placeholder="e.g. Son7" />
-          <button id="createBtn" class="primary">Create room</button>
+          <label for="nickname">닉네임</label>
+          <input id="nickname" maxlength="18" placeholder="예: 손흥민짱" />
+          <button id="createBtn" class="primary">방 만들기</button>
         </div>
         <div>
-          <label for="roomCode">Invite code</label>
+          <label for="roomCode">초대 코드</label>
           <input id="roomCode" maxlength="5" placeholder="ABCDE" />
-          <button id="joinBtn">Join room</button>
+          <button id="joinBtn">방 참가하기</button>
         </div>
       </section>
 
@@ -37,44 +37,44 @@
             <h2 id="roomLabel">-----</h2>
           </div>
           <div class="statusbox">
-            <p class="small">STATUS</p>
-            <strong id="phaseLabel">Lobby</strong>
+            <p class="small">상태</p>
+            <strong id="phaseLabel">로비</strong>
           </div>
         </div>
 
         <div class="banner">
-          <span id="syncLabel">Waiting for sync</span>
-          <span id="messageLabel">The host can start once everyone joins.</span>
+          <span id="syncLabel">동기화 대기 중</span>
+          <span id="messageLabel">방장이 시작하면 게임이 열립니다.</span>
         </div>
 
         <div class="card-lite">
           <div>
-            <p class="small">INVITE LINK</p>
-            <strong id="inviteLink">Pending</strong>
-            <p id="ttlLabel" class="muted">Room lifetime will appear here.</p>
+            <p class="small">초대 링크</p>
+            <strong id="inviteLink">생성 대기 중</strong>
+            <p id="ttlLabel" class="muted">방 유지 시간이 여기에 표시됩니다.</p>
           </div>
-          <button id="copyInviteBtn">Copy invite link</button>
+          <button id="copyInviteBtn">초대 링크 복사</button>
         </div>
 
         <div class="grid-two">
           <div class="panel">
-            <h3>Players</h3>
+            <h3>플레이어</h3>
             <div id="playersList" class="players"></div>
             <div id="hostControls" class="controls hidden">
-              <button id="startBtn" class="primary">Start game</button>
-              <button id="revealBtn">Reveal answer</button>
-              <button id="nextBtn">Next round</button>
-              <button id="resetBtn">New game</button>
+              <button id="startBtn" class="primary">게임 시작</button>
+              <button id="revealBtn">정답 공개</button>
+              <button id="nextBtn">다음 라운드</button>
+              <button id="resetBtn">새 게임</button>
             </div>
           </div>
 
           <div class="panel">
-            <h3>Round</h3>
-            <div id="roundBox" class="round empty">The game has not started yet.</div>
+            <h3>라운드</h3>
+            <div id="roundBox" class="round empty">게임이 아직 시작되지 않았습니다.</div>
             <div id="answerBox" class="answerbox hidden">
-              <label for="answerInput">Answer</label>
-              <input id="answerInput" maxlength="40" placeholder="Enter your answer" />
-              <button id="submitBtn" class="primary">Submit</button>
+              <label for="answerInput">정답</label>
+              <input id="answerInput" maxlength="40" placeholder="정답 입력" />
+              <button id="submitBtn" class="primary">제출</button>
             </div>
           </div>
         </div>
